@@ -1,0 +1,12 @@
+#%PAM-1.0
+auth		sufficient	pam_rootok.so
+auth		substack	common-auth
+auth		include		postlogin-auth
+account		sufficient	pam_succeed_if.so uid = 0 use_uid quiet
+account		include		common-auth
+password	include		common-auth
+-session	required	pam_selinux.so close
+-session	required	pam_loginuid.so
+-session	required	pam_selinux.so nottys open
+session		include		common-auth
+session		include		postlogin-session

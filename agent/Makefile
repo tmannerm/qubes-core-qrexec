@@ -6,6 +6,7 @@ VCHAN_PKG = $(if $(BACKEND_VMM),vchan-$(BACKEND_VMM),vchan)
 HAVE_PAM_APPL = $(or $(and $(wildcard /usr/include/security/pam_appl.h),1),)
 .SUFFIXES:
 os := $(shell lsb_release -is)
+os_desc := $(shell lsb_release -ds)
 CFLAGS += -I. -I../libqrexec -g -O2 -Wall -Wextra -Werror \
     $(shell pkg-config --cflags $(VCHAN_PKG)) -fstack-protector \
     -fstack-protector-strong -fPIC -std=gnu11 -D_POSIX_C_SOURCE=200809L \
@@ -50,6 +51,10 @@ else ifeq ($(os), Arch)
 	install -D -m 0644 qrexec.pam.archlinux $(DESTDIR)/etc/pam.d/qrexec
 else ifeq ($(os), Gentoo)
 	install -D -m 0644 qrexec.pam.gentoo $(DESTDIR)/etc/pam.d/qrexec
+else ifneq (,$(findstring Leap, $(os_desc)))
+	install -D -m 0644 qrexec.pam.leap $(DESTDIR)/etc/pam.d/qrexec
+else ifneq (,$(findstring Tumbleweed, $(os_desc)))
+	install -D -m 0644 qrexec.pam.tw $(DESTDIR)/etc/pam.d/qrexec
 else
 	install -D -m 0644 qrexec.pam $(DESTDIR)/etc/pam.d/qrexec
 endif
